@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { FaArrowRight, FaClock, FaHeart, FaHome, FaCompass } from "react-icons/fa";
+import {
+  FaArrowRight,
+  FaClock,
+  FaHeart,
+  FaHome,
+  FaCompass,
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { fetchBlogPosts } from "../lib/sanityClient";
 import "./Blog.css";
@@ -13,6 +19,7 @@ const Blog = () => {
   const ctaRef = useRef(null);
   const emptyStateRef = useRef(null);
 
+  // Fetch posts from Sanity
   useEffect(() => {
     const getBlogPosts = async () => {
       try {
@@ -26,23 +33,18 @@ const Blog = () => {
         setLoading(false);
       }
     };
-
     getBlogPosts();
   }, []);
 
+  // Animate sections on scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-in");
-          }
+          if (entry.isIntersecting) entry.target.classList.add("animate-in");
         });
       },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px",
-      }
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
     );
 
     const header = headerRef.current;
@@ -50,61 +52,53 @@ const Blog = () => {
     const cta = ctaRef.current;
     const emptyState = emptyStateRef.current;
 
-    setTimeout(() => {
+    const observeElements = () => {
       if (header) observer.observe(header);
 
       if (blogPosts.length > 0) {
-        cards.forEach((card) => {
-          if (card) observer.observe(card);
-        });
-
+        cards.forEach((card) => card && observer.observe(card));
         if (cta) observer.observe(cta);
-      } else {
-        if (emptyState) observer.observe(emptyState);
-      }
-    }, 100);
+      } else if (emptyState) observer.observe(emptyState);
+    };
+
+    setTimeout(observeElements, 100);
 
     return () => {
       if (header) observer.unobserve(header);
-      cards.forEach((card) => {
-        if (card) observer.unobserve(card);
-      });
+      cards.forEach((card) => card && observer.unobserve(card));
       if (cta) observer.unobserve(cta);
       if (emptyState) observer.unobserve(emptyState);
     };
   }, [blogPosts]);
 
+  // Add blog card refs dynamically
   const addCardToRefs = (el) => {
     if (el && !cardsRef.current.includes(el)) {
       cardsRef.current.push(el);
     }
   };
 
+  // Calculate reading time from content
   const calculateReadingTime = (content) => {
     if (!content) return 1;
-
     try {
       let wordCount = 0;
-
       if (typeof content === "string") {
-        wordCount = content.trim().split(/\s+/).filter(Boolean).length;
+        wordCount = content.trim().split(/\s+/).length;
       } else if (Array.isArray(content)) {
         wordCount = content.reduce((count, block) => {
           if (block._type === "block" && block.children) {
             return (
               count +
-              block.children.reduce((childCount, child) => {
+              block.children.reduce((c, child) => {
                 const text = child?.text || "";
-                return (
-                  childCount + text.trim().split(/\s+/).filter(Boolean).length
-                );
+                return c + text.trim().split(/\s+/).filter(Boolean).length;
               }, 0)
             );
           }
           return count;
         }, 0);
       }
-
       return Math.max(1, Math.ceil(wordCount / 200));
     } catch (error) {
       console.warn("Error calculating reading time:", error);
@@ -112,19 +106,19 @@ const Blog = () => {
     }
   };
 
+  // Get short excerpt
   const getExcerpt = (post) => {
-    if (post.excerpt) {
+    if (post.excerpt)
       return post.excerpt.length > 120
         ? post.excerpt.substring(0, 120) + "..."
         : post.excerpt;
-    }
 
     if (post.body && Array.isArray(post.body)) {
       const firstBlock = post.body.find(
-        (block) => block._type === "block" && block.children
+        (b) => b._type === "block" && b.children
       );
-      if (firstBlock && firstBlock.children) {
-        const text = firstBlock.children.map((child) => child.text).join(" ");
+      if (firstBlock) {
+        const text = firstBlock.children.map((c) => c.text).join(" ");
         return text.length > 120 ? text.substring(0, 120) + "..." : text;
       }
     }
@@ -132,40 +126,30 @@ const Blog = () => {
     return "Read more about this topic...";
   };
 
+  // Format date
   const formatDate = (dateString) => {
     if (!dateString) return "Unknown Date";
-
     try {
       return new Date(dateString).toLocaleDateString("en-US", {
         year: "numeric",
         month: "short",
         day: "numeric",
       });
-    } catch (error) {
-      console.warn("Error formatting date:", error);
+    } catch {
       return "Unknown Date";
     }
   };
 
-  const getCategory = (post) => {
-    if (post.category) {
-      return post.category;
-    }
-    return "Uncategorized";
-  };
-
-  const getImageUrl = (post) => {
-    if (post.mainImage?.asset?.url) {
-      return post.mainImage.asset.url;
-    }
-    return null;
-  };
+  // Helpers
+  const getCategory = (post) => post.category || "Uncategorized";
+  const getImageUrl = (post) => post.mainImage?.asset?.url || null;
 
   const featuredPosts = blogPosts.slice(0, 4);
 
   return (
     <section className="blog-section" id="blog">
       <div className="container">
+        {/* Header */}
         <div ref={headerRef} className="blog-header-modern">
           <h2 className="blog-title-modern">
             Blog & <span className="blog-title-accent-modern">Articles</span>
@@ -184,6 +168,7 @@ const Blog = () => {
           </div>
         </div>
 
+        {/* Loading State */}
         {loading && (
           <div className="blog-loading-state">
             <div className="loading-spinner">
@@ -193,21 +178,28 @@ const Blog = () => {
           </div>
         )}
 
+        {/* Blog Cards */}
         {!loading && blogPosts.length > 0 && (
           <>
             <div className="blog-grid-modern">
               {featuredPosts.map((post, index) => {
-                const title = post?.title || "Untitled Blog";
+                const {
+                  _id,
+                  title = "Untitled Blog",
+                  slug,
+                  publishedAt,
+                  body,
+                } = post;
+
                 const category = getCategory(post);
-                const date = formatDate(post?.publishedAt);
+                const date = formatDate(publishedAt);
                 const excerpt = getExcerpt(post);
-                const readingTime = calculateReadingTime(post?.body);
+                const readingTime = calculateReadingTime(body);
                 const imageUrl = getImageUrl(post);
-                const slug = post?.slug?.current;
 
                 return (
                   <article
-                    key={post._id}
+                    key={_id}
                     ref={addCardToRefs}
                     className="blog-card-modern"
                     data-index={index}
@@ -235,18 +227,17 @@ const Blog = () => {
                         <span className="blog-date-modern">{date}</span>
                         <span className="blog-meta-separator-modern">•</span>
                         <span className="blog-reading-time-modern">
-                          <FaClock className="clock-icon-modern" />
+                          <FaClock className="clock-icon-modern" />{" "}
                           {readingTime} min read
                         </span>
                       </div>
 
                       <h3 className="blog-card-title-modern">{title}</h3>
-
                       <p className="blog-card-excerpt-modern">{excerpt}</p>
 
                       <div className="blog-card-footer">
                         <Link
-                          to={`/blog/${slug || post._id}`}
+                          to={`/blog/${slug?.current || _id}`}
                           className="blog-card-link-modern"
                         >
                           Read More
@@ -261,21 +252,21 @@ const Blog = () => {
               })}
             </div>
 
-            {blogPosts.length > 0 && (
-              <div ref={ctaRef} className="blog-cta-modern">
-                <div className="cta-content">
-                  <Link to="/blog" className="cta-button-modern">
-                    <span>View All Articles</span>
-                    <div className="button-arrow">
-                      <FaArrowRight />
-                    </div>
-                  </Link>
-                </div>
+            {/* CTA */}
+            <div ref={ctaRef} className="blog-cta-modern">
+              <div className="cta-content">
+                <Link to="/blog" className="cta-button-modern">
+                  <span>View All Articles</span>
+                  <div className="button-arrow">
+                    <FaArrowRight />
+                  </div>
+                </Link>
               </div>
-            )}
+            </div>
           </>
         )}
 
+        {/* Empty State */}
         {!loading && blogPosts.length === 0 && (
           <div ref={emptyStateRef} className="blog-empty-state">
             <div className="empty-state-content">
@@ -290,19 +281,14 @@ const Blog = () => {
               </p>
               <div className="empty-state-actions">
                 <Link to="/" className="empty-state-btn primary">
-                  <FaHome className="btn-icon" />
-                  Back to Home
+                  <FaHome className="btn-icon" /> Back to Home
                 </Link>
                 <Link to="/portfolio" className="empty-state-btn secondary">
-                  <FaHeart className="btn-icon" />
-                  Explore My Work
+                  <FaHeart className="btn-icon" /> Explore My Work
                 </Link>
               </div>
               <div className="empty-state-note">
-                <p>
-                  In the meantime, feel free to explore my portfolio or get in
-                  touch!
-                </p>
+                <p>In the meantime, feel free to explore my portfolio or get in touch!</p>
               </div>
             </div>
           </div>

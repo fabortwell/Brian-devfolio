@@ -117,7 +117,7 @@ const Portfolio = () => {
                     <div className="portfolio-overlay-content">
                       <h4 className="overlay-title">Project Overview</h4>
                       <p className="overlay-description">
-                        {project.summary?.substring(0, 120)}...
+                        {project.summary}
                       </p>
                       <div className="portfolio-overlay-actions">
                         {liveLink && (
@@ -154,9 +154,11 @@ const Portfolio = () => {
                     <h3 className="portfolio-item-title">{project.title}</h3>
                   </div>
 
-                  <p className="portfolio-item-description">
-                    {project.summary}
-                  </p>
+                  <div className="portfolio-item-description-container">
+                    <p className="portfolio-item-description">
+                      {project.summary}
+                    </p>
+                  </div>
 
                   {project.tech && project.tech.length > 0 && (
                     <div className="portfolio-tags">

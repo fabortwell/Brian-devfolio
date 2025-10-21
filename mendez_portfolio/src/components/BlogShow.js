@@ -1,8 +1,8 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FaArrowLeft, FaClock, FaCalendar, FaTag, FaShare } from "react-icons/fa";
 import { sanityClient } from "../lib/sanityClient";
+import { PortableText } from "@portabletext/react";
 import "./Blog.css";
 
 const BlogShow = () => {
@@ -10,8 +10,6 @@ const BlogShow = () => {
   const [blogPost, setBlogPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  console.log("DocumentId from URL:", id);
 
   useEffect(() => {
     const fetchBlogPost = async () => {
@@ -25,21 +23,26 @@ const BlogShow = () => {
         setLoading(true);
         setError(null);
 
-        console.log("Making Sanity API call for blog:", id);
-        const query = `*[_type == "post" && (slug.current == $id || _id == $id)][0] {
+        const query = `*[_type == "post" && (slug.current == $id || _id == $id)][0]{
           _id,
           title,
           slug,
           publishedAt,
           excerpt,
-          body,
+          body[]{
+            ...,
+            _type == "image" => {
+              ...,
+              asset->{
+                _id,
+                url
+              }
+            }
+          },
           category,
           mainImage {
             asset->{
-              url,
-              metadata {
-                dimensions
-              }
+              url
             }
           },
           author->{
@@ -53,16 +56,10 @@ const BlogShow = () => {
         }`;
 
         const post = await sanityClient.fetch(query, { id });
-
-        console.log("Sanity Blog API Response:", post);
-
-        if (post) {
-          setBlogPost(post);
-        } else {
-          setError("Blog post not found in Sanity");
-        }
+        if (post) setBlogPost(post);
+        else setError("Blog post not found.");
       } catch (err) {
-        console.error("Error fetching blog post from Sanity:", err);
+        console.error("Error fetching blog post:", err);
         setError(`Failed to load blog post: ${err.message}`);
       } finally {
         setLoading(false);
@@ -71,71 +68,9 @@ const BlogShow = () => {
 
     fetchBlogPost();
   }, [id]);
-  const renderRichText = (blocks) => {
-    if (!blocks || !Array.isArray(blocks)) return null;
-
-    return blocks.map((block, index) => {
-      if (block._type === "block") {
-        const text = block.children.map((child) => child.text).join(" ");
-        const isFirstParagraph = index === 0;
-        const style = block.style || "normal";
-        
-        if (style === "h1") {
-          return <h1 key={index} className="blog-content-heading main-heading">{text}</h1>;
-        }
-        if (style === "h2") {
-          return <h2 key={index} className="blog-content-heading sub-heading">{text}</h2>;
-        }
-        if (style === "h3") {
-          return <h3 key={index} className="blog-content-heading topic-heading">{text}</h3>;
-        }
-        if (style === "blockquote") {
-          return <blockquote key={index} className="blog-content-blockquote">{text}</blockquote>;
-        }
-        return (
-          <div 
-            key={index} 
-            className={`blog-content-paragraph ${isFirstParagraph ? 'first-paragraph' : ''}`}
-          >
-            {isFirstParagraph && <span className="paragraph-indicator">¶</span>}
-            {text}
-          </div>
-        );
-      }
-      
-      if (block._type === "list") {
-        const ListTag = block.listItem === "number" ? "ol" : "ul";
-        
-        return (
-          <ListTag key={index} className="blog-content-list">
-            {block.children.map((listItem, listIndex) => (
-              <li key={listIndex}>
-                {listItem.children.map((child) => child.text).join(" ")}
-              </li>
-            ))}
-          </ListTag>
-        );
-      }
-
-      if (block._type === "image" && block.asset) {
-        return (
-          <div key={index} className="blog-content-image">
-            <img 
-              src={block.asset.url} 
-              alt={block.alt || "Blog content image"} 
-            />
-            {block.caption && <figcaption>{block.caption}</figcaption>}
-          </div>
-        );
-      }
-
-      return null;
-    });
-  };
 
   const calculateReadingTime = (blocks) => {
     if (!blocks || !Array.isArray(blocks)) return 5;
-    
     const wordCount = blocks.reduce((count, block) => {
       if (block._type === "block" && block.children) {
         return count + block.children.reduce((childCount, child) => {
@@ -145,46 +80,44 @@ const BlogShow = () => {
       }
       return count;
     }, 0);
-    
-    const readingTime = Math.ceil(wordCount / 200);
-    return readingTime < 1 ? 1 : readingTime;
+    return Math.ceil(wordCount / 200) || 1;
   };
 
-  const getCategory = (post) => {
-    if (post.category) {
-      return post.category;
-    }
-    return "Uncategorized";
-  };
+  const getCategory = (post) => post.category || "Uncategorized";
 
   const formatDate = (dateString) => {
     if (!dateString) return "Unknown Date";
-    
     try {
       return new Date(dateString).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
       });
-    } catch (error) {
-      console.warn("Error formatting date:", error);
+    } catch {
       return "Unknown Date";
     }
   };
 
-  const getExcerpt = (post) => {
-    if (post.excerpt) {
-      return post.excerpt;
-    }
-    
-    if (post.body && Array.isArray(post.body)) {
-      const firstBlock = post.body.find(block => block._type === "block");
-      if (firstBlock && firstBlock.children) {
-        return firstBlock.children.map(child => child.text).join(" ");
-      }
-    }
-    
-    return "";
+  const components = {
+    types: {
+      image: ({ value }) => (
+        <figure className="blog-content-image">
+          <img
+            src={value?.asset?.url}
+            alt={value?.alt || "Blog image"}
+            loading="lazy"
+          />
+          {value?.caption && <figcaption>{value.caption}</figcaption>}
+        </figure>
+      ),
+    },
+    block: {
+      h1: ({ children }) => <h1 className="blog-content-heading main-heading">{children}</h1>,
+      h2: ({ children }) => <h2 className="blog-content-heading sub-heading">{children}</h2>,
+      h3: ({ children }) => <h3 className="blog-content-heading topic-heading">{children}</h3>,
+      normal: ({ children }) => <p className="blog-content-paragraph">{children}</p>,
+      blockquote: ({ children }) => <blockquote className="blog-content-blockquote">{children}</blockquote>,
+    },
   };
 
   if (loading) {
@@ -204,31 +137,27 @@ const BlogShow = () => {
     return (
       <div className="blog-show-error">
         <div className="container">
-          <div className="error-content">
-            <h2>Article Not Found</h2>
-            <p>{error || "The article you're looking for doesn't exist."}</p>
-            <p className="error-debug">Blog DocumentId: {id}</p>
-            <Link to="/blog" className="back-to-blog">
-              <FaArrowLeft /> Back to All Articles
-            </Link>
-          </div>
+          <h2>Article Not Found</h2>
+          <p>{error || "The article you're looking for doesn't exist."}</p>
+          <Link to="/blog" className="back-to-blog">
+            <FaArrowLeft /> Back to All Articles
+          </Link>
         </div>
       </div>
     );
   }
 
   const title = blogPost.title || "Untitled Blog";
-  const category = getCategory(blogPost);
   const date = formatDate(blogPost.publishedAt);
   const readingTime = calculateReadingTime(blogPost.body);
-  const excerpt = getExcerpt(blogPost);
+  const category = getCategory(blogPost);
   const imageUrl = blogPost.mainImage?.asset?.url;
 
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: title,
-        text: excerpt || `Check out this article: ${title}`,
+        title,
+        text: `Check out this article: ${title}`,
         url: window.location.href,
       });
     } else {
@@ -245,71 +174,38 @@ const BlogShow = () => {
             <FaArrowLeft /> All Articles
           </Link>
         </div>
-        <header className="blog-show-header">
-          <div className="blog-show-category">
-            <FaTag className="category-icon" />
-            {category}
-          </div>
 
-          <h1 className="blog-show-title">{title}</h1>
+        <article className="blog-show-article">
+          <header className="blog-show-header">
+            <div className="blog-show-category">
+              <FaTag className="category-icon" /> {category}
+            </div>
+            <h1 className="blog-show-title">{title}</h1>
+            <div className="blog-show-meta">
+              <span><FaCalendar /> {date}</span>
+              <span><FaClock /> {readingTime} min read</span>
+              <button className="blog-show-share" onClick={handleShare}>
+                <FaShare /> Share
+              </button>
+            </div>
+          </header>
 
-          {excerpt && (
-            <div className="blog-show-excerpt">
-              <p>{excerpt}</p>
+          {imageUrl && (
+            <div className="blog-show-hero-image">
+              <img src={imageUrl} alt={title} loading="eager" />
             </div>
           )}
 
-          <div className="blog-show-meta">
-            <div className="blog-show-meta-item">
-              <FaCalendar className="meta-icon" />
-              <span>{date}</span>
-            </div>
-            <div className="blog-show-meta-item">
-              <FaClock className="meta-icon" />
-              <span>{readingTime} min read</span>
-            </div>
-            <button className="blog-show-share" onClick={handleShare}>
-              <FaShare className="share-icon" />
-              Share
-            </button>
+          <div className="blog-show-content">
+            <PortableText value={blogPost.body} components={components} />
           </div>
-        </header>
 
-        {imageUrl && (
-          <div className="blog-show-image">
-            <img src={imageUrl} alt={title} />
-          </div>
-        )}
-
-        <article className="blog-show-content">
-          <div className="blog-content-wrapper">
-            {blogPost.body && blogPost.body.length > 0 ? (
-              <div className="blog-content-inner">
-                {renderRichText(blogPost.body)}
-              </div>
-            ) : (
-              <div className="no-content">
-                <p>No content available for this article.</p>
-              </div>
-            )}
-          </div>
+          <footer className="blog-show-footer">
+            <div className="blog-show-tags">
+              <strong>Tags:</strong> <span className="blog-tag">{category}</span>
+            </div>
+          </footer>
         </article>
-
-        <footer className="blog-show-footer">
-          <div className="blog-show-tags">
-            <strong>Tags: </strong>
-            <span className="blog-tag">{category}</span>
-          </div>
-
-          <div className="blog-show-actions">
-            <button className="blog-show-action-btn" onClick={handleShare}>
-              <FaShare /> Share Article
-            </button>
-            <Link to="/blog" className="blog-show-action-btn">
-              <FaArrowLeft /> More Articles
-            </Link>
-          </div>
-        </footer>
       </div>
     </div>
   );
