@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMapMarkerAlt,
@@ -28,7 +28,7 @@ L.Icon.Default.mergeOptions({
 
 const EMAILJS_CONFIG = {
   serviceId: process.env.REACT_APP_EMAILJS_SERVICE_ID,
-  templateId: process.env.REACT_APP_EMAILJS_TEMPLATE_ID, 
+  templateId: process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
   publicKey: process.env.REACT_APP_EMAILJS_PUBLIC_KEY,
 };
 
@@ -48,7 +48,7 @@ const Contact = () => {
   const [submitStatus, setSubmitStatus] = useState(null);
   const [statusMessage, setStatusMessage] = useState('');
 
-  const [map, setMap] = useState(null);
+  const mapRef = useRef(null);
 
   useEffect(() => {
     if (EMAILJS_CONFIG.publicKey) {
@@ -57,9 +57,9 @@ const Contact = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && !mapRef.current) {
       const mapInstance = L.map('map').setView([-1.286389, 36.817223], 13);
-      
+
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
       }).addTo(mapInstance);
@@ -69,11 +69,12 @@ const Contact = () => {
         .bindPopup('BrianDev<br>Nairobi, Kenya')
         .openPopup();
 
-      setMap(mapInstance);
+      mapRef.current = mapInstance;
 
       return () => {
-        if (mapInstance) {
-          mapInstance.remove();
+        if (mapRef.current) {
+          mapRef.current.remove();
+          mapRef.current = null;
         }
       };
     }
@@ -86,6 +87,7 @@ const Contact = () => {
       [name]: value
     }));
   };
+
   const triggerConfetti = () => {
     confetti({
       particleCount: 150,
@@ -103,6 +105,7 @@ const Contact = () => {
       setStatusMessage('Please fill in all required fields.');
       return;
     }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setSubmitStatus('error');
@@ -141,8 +144,7 @@ const Contact = () => {
         setSubmitStatus('success');
         setStatusMessage('Thank you! Your message has been sent successfully. We\'ll get back to you soon!');
         triggerConfetti();
-        
-        // Reset form
+
         setFormData({
           name: '',
           email: '',
@@ -179,7 +181,7 @@ const Contact = () => {
           <h2>Get In Touch</h2>
           <p>Have a project in mind or want to discuss opportunities? Reach out and let's start a conversation.</p>
         </div>
-        
+
         {submitStatus && (
           <div className={`form-status ${submitStatus}`}>
             <div className="status-content">
@@ -206,7 +208,7 @@ const Contact = () => {
                 <h4>{submitStatus === 'success' ? 'Message Sent!' : 'Oops! Something went wrong'}</h4>
                 <p>{statusMessage}</p>
               </div>
-              <button 
+              <button
                 className="status-close"
                 onClick={() => {
                   setSubmitStatus(null);
@@ -218,7 +220,7 @@ const Contact = () => {
             </div>
           </div>
         )}
-        
+
         <div className="contact-wrapper">
           <div className="contact-info">
             <div className="info-item">
@@ -230,7 +232,7 @@ const Contact = () => {
                 <p>Nairobi, Kenya<br />East Africa</p>
               </div>
             </div>
-            
+
             <div className="info-item">
               <div className="info-icon">
                 <FontAwesomeIcon icon={faPhone} />
@@ -240,7 +242,7 @@ const Contact = () => {
                 <p>+254 704 712 885<br />+254 788 785 678</p>
               </div>
             </div>
-            
+
             <div className="info-item">
               <div className="info-icon">
                 <FontAwesomeIcon icon={faEnvelope} />
@@ -250,76 +252,77 @@ const Contact = () => {
                 <p>briansittt@gmail.com</p>
               </div>
             </div>
-            
+
+            {/* ✅ Fixed social links with valid hrefs */}
             <div className="social-links">
-              <a href="#" aria-label="LinkedIn">
+              <a href="https://linkedin.com/in/briansitati" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <FontAwesomeIcon icon={faLinkedinIn} />
               </a>
-              <a href="#" aria-label="Twitter">
+              <a href="https://twitter.com/brian_dev" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
                 <FontAwesomeIcon icon={faTwitter} />
               </a>
-              <a href="#" aria-label="GitHub">
+              <a href="https://github.com/briansitati" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                 <FontAwesomeIcon icon={faGithub} />
               </a>
-              <a href="#" aria-label="Instagram">
+              <a href="https://instagram.com/brian.dev" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                 <FontAwesomeIcon icon={faInstagram} />
               </a>
             </div>
           </div>
-          
+
           <div className="contact-form">
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="name">Full Name *</label>
-                <input 
-                  type="text" 
-                  id="name" 
+                <input
+                  type="text"
+                  id="name"
                   name="name"
-                  className="form-control" 
-                  placeholder="Your Name" 
+                  className="form-control"
+                  placeholder="Your Name"
                   value={formData.name}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  required 
+                  required
                 />
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="email">Email Address *</label>
-                <input 
-                  type="email" 
-                  id="email" 
+                <input
+                  type="email"
+                  id="email"
                   name="email"
-                  className="form-control" 
-                  placeholder="your.email@example.com" 
+                  className="form-control"
+                  placeholder="your.email@example.com"
                   value={formData.email}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  required 
+                  required
                 />
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="subject">Subject</label>
-                <input 
-                  type="text" 
-                  id="subject" 
+                <input
+                  type="text"
+                  id="subject"
                   name="subject"
-                  className="form-control" 
-                  placeholder="What is this regarding?" 
+                  className="form-control"
+                  placeholder="What is this regarding?"
                   value={formData.subject}
                   onChange={handleChange}
                   disabled={isSubmitting}
                 />
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="message">Your Message *</label>
-                <textarea 
-                  id="message" 
+                <textarea
+                  id="message"
                   name="message"
-                  className="form-control" 
-                  placeholder="Tell us about your project or inquiry..." 
+                  className="form-control"
+                  placeholder="Tell us about your project or inquiry..."
                   rows="5"
                   value={formData.message}
                   onChange={handleChange}
@@ -327,9 +330,9 @@ const Contact = () => {
                   required
                 ></textarea>
               </div>
-              
-              <button 
-                type="submit" 
+
+              <button
+                type="submit"
                 className={`submit-btn ${isSubmitting ? 'submitting' : ''}`}
                 disabled={isSubmitting}
               >
@@ -345,7 +348,7 @@ const Contact = () => {
                 )}
               </button>
             </form>
-            
+
             <div className="map-container">
               <div id="map" className="interactive-map"></div>
             </div>
