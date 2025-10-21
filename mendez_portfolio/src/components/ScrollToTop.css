@@ -1,0 +1,215 @@
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease-in-out;
+}
+
+.scroll-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-button {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.scroll-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.scroll-button:hover::before {
+  left: 100%;
+}
+
+.scroll-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.6);
+  background: linear-gradient(135deg, #34D399 0%, #10B981 50%, #059669 100%);
+}
+
+.scroll-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+}
+
+.scroll-button svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.scroll-button:hover svg {
+  transform: translateY(-3px);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  }
+  50% {
+    box-shadow: 0 6px 25px rgba(16, 185, 129, 0.7), 0 0 15px rgba(16, 185, 129, 0.4);
+  }
+}
+
+.scroll-to-top.show .scroll-button {
+  animation: glow 3s ease-in-out infinite;
+}
+
+.scroll-to-top.show .scroll-button:hover {
+  animation: none;
+}
+
+.scroll-to-top.show .scroll-button:focus {
+  outline: 3px solid rgba(16, 185, 129, 0.5);
+  outline-offset: 2px;
+}
+
+@media (prefers-contrast: high) {
+  .scroll-button {
+    border: 3px solid #ffffff;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  }
+  
+  .scroll-button:hover {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-button {
+    transition: none;
+  }
+  
+  .scroll-button::before {
+    display: none;
+  }
+  
+  .scroll-to-top.show .scroll-button {
+    animation: none;
+  }
+  
+  .scroll-button:hover svg {
+    transform: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .scroll-to-top {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .scroll-button {
+    width: 52px;
+    height: 52px;
+    font-size: 1.3rem;
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.5);
+  }
+  
+  .scroll-button svg {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .scroll-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(16, 185, 129, 0.6);
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-to-top {
+    bottom: 18px;
+    right: 18px;
+  }
+  
+  .scroll-button {
+    width: 54px;
+    height: 54px;
+    font-size: 1.4rem;
+  }
+  
+  .scroll-button svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .scroll-to-top.show .scroll-button {
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .scroll-button {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+  }
+  
+  .scroll-button:hover {
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.7);
+  }
+}
+
+@media (min-width: 1440px) {
+  .scroll-to-top {
+    bottom: 40px;
+    right: 40px;
+  }
+  
+  .scroll-button {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .scroll-button svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media print {
+  .scroll-to-top {
+    display: none !important;
+  }
+}

@@ -1,0 +1,357 @@
+
+.footer {
+  background: var(--gradient-primary);
+  color: var(--text-primary);
+  padding: 80px 0 0;
+  position: relative;
+  border-top: 1px solid var(--border-color);
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-accent);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 50px;
+  padding-bottom: 50px;
+}
+
+/* Footer Brand Section */
+.footer-section:first-child {
+  padding-right: 20px;
+}
+
+.footer-brand {
+  margin-bottom: 20px;
+}
+
+.footer-logo {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.footer-logo span {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.footer-tagline {
+  color: var(--accent-color);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.footer-description {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 30px;
+  font-size: 1rem;
+  max-width: 320px;
+}
+
+/* Social Links */
+.social-links {
+  display: flex;
+  gap: 12px;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.social-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-accent);
+  transition: left 0.3s ease;
+  z-index: 1;
+}
+
+.social-link:hover::before {
+  left: 0;
+}
+
+.social-link svg {
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+  width: 18px;
+  height: 18px;
+}
+
+.social-link:hover {
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px color-mix(in srgb, var(--accent-color) 25%, transparent);
+  border-color: transparent;
+}
+
+/* Section Headers */
+.footer-section h4 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 25px;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.footer-section h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: var(--gradient-accent);
+  border-radius: 2px;
+}
+
+/* Footer Links */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 14px;
+}
+
+.footer-links a,
+.footer-links span {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 4px 0;
+  display: inline-block;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.footer-links a::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--accent-color);
+  transform: translateX(8px);
+}
+
+.footer-links a:hover::before {
+  width: 100%;
+}
+
+/* Footer Divider */
+.footer-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 0;
+  opacity: 0.6;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  padding: 30px 0;
+}
+
+.footer-bottom-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.copyright {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.made-with-love {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+}
+
+.love-emoji {
+  color: #ff4757;
+  font-size: 1.2rem;
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Animation for footer sections */
+.footer-section {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.footer-section:nth-child(1) { animation-delay: 0.1s; }
+.footer-section:nth-child(2) { animation-delay: 0.2s; }
+.footer-section:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .footer-main {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 60px;
+  }
+  
+  .footer-section:first-child {
+    grid-column: 1 / -1;
+    padding-right: 0;
+    text-align: center;
+  }
+  
+  .footer-description {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .social-links {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 60px 0 0;
+  }
+  
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+  
+  .footer-section h4::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .copyright {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-content {
+    padding: 0 15px;
+  }
+  
+  .footer-logo {
+    font-size: 2rem;
+  }
+  
+  .footer-tagline {
+    font-size: 1rem;
+  }
+  
+  .social-links {
+    gap: 10px;
+  }
+  
+  .social-link {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-section,
+  .social-link,
+  .footer-links a,
+  .love-emoji {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .love-emoji {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .footer {
+    background: white !important;
+    color: black !important;
+    border-top: 2px solid #333 !important;
+    padding: 30px 0 0 !important;
+  }
+  
+  .footer::before {
+    background: #333 !important;
+  }
+  
+  .social-links {
+    display: none !important;
+  }
+}
