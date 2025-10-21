@@ -142,7 +142,7 @@ const Contact = () => {
 
       if (result.status === 200) {
         setSubmitStatus('success');
-        setStatusMessage('Thank you! Your message has been sent successfully. We\'ll get back to you soon!');
+        setStatusMessage('Thank you! Your message has been sent successfully. I\'ll get back to you soon!');
         triggerConfetti();
 
         setFormData({
@@ -253,7 +253,6 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* ✅ Fixed social links with valid hrefs */}
             <div className="social-links">
               <a href="https://linkedin.com/in/briansitati" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <FontAwesomeIcon icon={faLinkedinIn} />
