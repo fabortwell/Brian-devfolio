@@ -254,17 +254,14 @@ const Contact = () => {
             </div>
 
             <div className="social-links">
-              <a href="https://linkedin.com/in/briansitati" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <a href="https://www.linkedin.com/in/brian-sitati-675435198/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <FontAwesomeIcon icon={faLinkedinIn} />
               </a>
-              <a href="https://twitter.com/brian_dev" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <a href="https://x.com/itsme_brian" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
                 <FontAwesomeIcon icon={faTwitter} />
               </a>
-              <a href="https://github.com/briansitati" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <a href="https://github.com/fabortwell" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                 <FontAwesomeIcon icon={faGithub} />
-              </a>
-              <a href="https://instagram.com/brian.dev" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                <FontAwesomeIcon icon={faInstagram} />
               </a>
             </div>
           </div>
