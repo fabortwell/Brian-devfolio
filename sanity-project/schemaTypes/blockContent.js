@@ -1,4 +1,4 @@
-// schemas/blockContent.js
+
 import { defineArrayMember, defineType } from 'sanity'
 
 export const blockContent = defineType({
@@ -6,7 +6,25 @@ export const blockContent = defineType({
   title: 'Block Content',
   type: 'array',
   of: [
-    defineArrayMember({ type: 'block' }),
-    defineArrayMember({ type: 'image', options: { hotspot: true } })
-  ]
+    defineArrayMember({
+      type: 'block',
+    }),
+    defineArrayMember({
+      type: 'image',
+      options: { hotspot: true },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt text',
+          description: 'Alternative text for screen readers',
+        },
+        {
+          name: 'caption',
+          type: 'string',
+          title: 'Caption',
+        },
+      ],
+    }),
+  ],
 })

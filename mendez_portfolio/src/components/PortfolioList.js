@@ -70,12 +70,8 @@ const PortfolioList = () => {
               </p>
               <div className="portfolio-list-stats">
                 <div className="stat-item">
-                  <span className="stat-number">{projects.length}</span>
-                  <span className="stat-label">Total Projects</span>
                 </div>
                 <div className="stat-item">
-                  <span className="stat-number">{categories.length - 1}</span>
-                  <span className="stat-label">Categories</span>
                 </div>
               </div>
             </div>

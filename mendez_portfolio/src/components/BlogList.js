@@ -212,12 +212,7 @@ const BlogList = () => {
               </p>
               <div className="blog-list-stats">
                 <div className="stat-item">
-                  <span className="stat-number">{blogPosts.length}</span>
-                  <span className="stat-label">Total Articles</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">{totalPages}</span>
-                  <span className="stat-label">Pages</span>
+                 
                 </div>
               </div>
             </div>
