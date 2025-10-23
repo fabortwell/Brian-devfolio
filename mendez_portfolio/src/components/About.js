@@ -39,7 +39,7 @@ const About = () => {
         <div className="about-content">
           <div ref={textRef} className="about-text">
             <h2>About Me</h2>
-              <p className="intro-text">
+            <p className="intro-text">
               Welcome to my creative space! I'm Brian,<br />
               a passionate Software Developer crafting<br />
               clean, efficient, and scalable digital solutions.<br />
@@ -64,43 +64,43 @@ const About = () => {
 
           <div ref={statsRef} className="about-stats">
             <div className="stats-grid">
-              <div className="stat-box">
+              <div className="stat-item">
                 <div className="stat-icon">
                   <FaAward />
                 </div>
                 <div className="stat-content">
-                  <h3>2+</h3>
-                  <p>Years of Experience</p>
+                  <span className="stat-number">2+</span>
+                  <span className="stat-text">Years of Experience</span>
                 </div>
               </div>
 
-              <div className="stat-box">
+              <div className="stat-item">
                 <div className="stat-icon">
                   <FaProjectDiagram />
                 </div>
                 <div className="stat-content">
-                  <h3>20+</h3>
-                  <p>Projects Completed</p>
+                  <span className="stat-number">20+</span>
+                  <span className="stat-text">Projects Completed</span>
                 </div>
               </div>
 
-              <div className="stat-box">
+              <div className="stat-item">
                 <div className="stat-icon">
                   <FaSmile />
                 </div>
                 <div className="stat-content">
-                  <h3>100%</h3>
-                  <p>Client Satisfactions</p>
+                  <span className="stat-number">100%</span>
+                  <span className="stat-text">Client Satisfaction</span>
                 </div>
               </div>
 
-              <div className="stat-box">
+              <div className="stat-item">
                 <div className="stat-icon">
                   <FaTrophy />
                 </div>
                 <div className="stat-content">
-                  <h3>2+</h3>
-                  <p>Award Winner</p>
+                  <span className="stat-number">2+</span>
+                  <span className="stat-text">Awards Won</span>
                 </div>
               </div>
             </div>

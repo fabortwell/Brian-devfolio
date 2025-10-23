@@ -1,20 +1,61 @@
-
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
 import './Hero.css';
 
 const Hero = () => {
+  const heroRef = useRef(null);
+  const leftRef = useRef(null);
+  const rightRef = useRef(null);
+  
   const skills = {
     languages: ['JavaScript', 'React', 'Ruby', 'Ruby on Rails'],
     databases: ['PostgreSQL', 'MySQL', 'MongoDB'],
     tools: ['AWS', 'Figma', 'Git', 'GitHub']
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+            if (leftRef.current) {
+              setTimeout(() => {
+                leftRef.current.classList.add('slide-in-left');
+              }, 200);
+            }
+            if (rightRef.current) {
+              setTimeout(() => {
+                rightRef.current.classList.add('slide-in-right');
+              }, 400);
+            }
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '0px 0px -50px 0px',
+      }
+    );
+
+    const heroElement = heroRef.current;
+    if (heroElement) {
+      observer.observe(heroElement);
+    }
+
+    return () => {
+      if (heroElement) {
+        observer.unobserve(heroElement);
+      }
+    };
+  }, []);
+
   return (
-    <section className="hero" id="home">
+    <section className="hero" id="home" ref={heroRef}>
       <div className="container">
         <div className="hero-content">
-          <div className="hero-left">
+          <div className="hero-left" ref={leftRef}>
             <div className="greeting">
               <span className="greeting-text">Hello!</span>
               <span className="greeting-emoji">👋</span>
@@ -56,21 +97,21 @@ const Hero = () => {
               </div>
             </div>
           </div>
-          <div className="hero-right">
+
+          <div className="hero-right" ref={rightRef}>
             <div className="code-display">
               <div className="code-header">
                 <div className="code-dots">
                   <span className="dot red"></span>
                   <span className="dot yellow"></span>
-                  <span className="dot green"></span>
                 </div>
                 <span className="code-filename">developer.js</span>
               </div>
-              
+
               <div className="code-content">
                 <div className="code-line comment">// Software Engineer</div>
                 <div className="code-line">
-             <span className="keyword">const&nbsp;</span>developer = {"{"}
+                  <span className="keyword">const&nbsp;</span>developer = {"{"}
                 </div>
                 <div className="code-line indent">
                   <span className="property">name</span>: 
@@ -97,7 +138,7 @@ const Hero = () => {
                   ],
                 </div>
                 <div className="code-line indent">
-                  <span className="property">tools:</span>: [
+                  <span className="property">tools</span>: [
                   {skills.tools.map((tool, index) => (
                     <span key={tool}>
                       <span className="string"> '{tool}'</span>
