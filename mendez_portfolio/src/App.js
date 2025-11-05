@@ -19,7 +19,7 @@ import Footer from "./components/Footer";
 import "./App.css";
 
 const HomePage = () => (
-  <>
+  <div className="w-full overflow-x-hidden">
     <Hero />
     <About />
     <Service />
@@ -27,10 +27,9 @@ const HomePage = () => (
     <Testimonial />
     <Blog />
     <Contact />
-  </>
+  </div>
 );
 
-// Scroll to top on route change
 const ScrollToTopOnRouteChange = () => {
   const { pathname } = useLocation();
 
@@ -45,23 +44,18 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
-        <div className="App">
+        <div className="App min-h-screen w-full overflow-x-hidden">
           <ScrollToTop />
           <ScrollToTopOnRouteChange />
           <Navbar />
-          <Routes>
-            {/* Home */}
-            <Route path="/" element={<HomePage />} />
-
-            {/* Portfolio listing page */}
-            <Route path="/portfolio/all" element={<PortfolioList />} />
-
-            {/* Blog listing page */}
-            <Route path="/blog" element={<BlogList />} />
-
-            {/* Blog single page - using ID */}
-            <Route path="/blog/:id" element={<BlogShow />} />
-          </Routes>
+          <main className="w-full overflow-x-hidden">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/portfolio/all" element={<PortfolioList />} />
+              <Route path="/blog" element={<BlogList />} />
+              <Route path="/blog/:id" element={<BlogShow />} />
+            </Routes>
+          </main>
           <Footer />
         </div>
       </Router>
