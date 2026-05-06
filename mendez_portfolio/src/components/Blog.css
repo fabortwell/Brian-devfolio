@@ -3,12 +3,13 @@
   padding: 120px 0 80px;
   background: var(--gradient-primary);
   position: relative;
+  overflow-x: hidden;
 }
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .blog-header-modern {
@@ -32,7 +33,6 @@
   margin-bottom: 30px;
   box-shadow: 0 8px 25px var(--shadow-color);
 }
-
 .badge-icon {
   font-size: 14px;
 }
@@ -54,6 +54,7 @@
   background-clip: text;
   position: relative;
 }
+
 
 .blog-title-modern::after {
   content: '';
@@ -112,10 +113,10 @@
   opacity: 1;
 }
 
-/* Modern Blog Grid */
+/* Modern Blog Grid — FIXED OVERFLOW */
 .blog-grid-modern {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 40px;
   margin-bottom: 80px;
 }
@@ -128,6 +129,8 @@
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   border: 1px solid var(--border-color);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .blog-card-modern:hover {
@@ -140,6 +143,7 @@
   position: relative;
   height: 240px;
   overflow: hidden;
+  width: 100%;
 }
 
 .blog-image-modern {
@@ -147,6 +151,7 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s ease;
+  display: block;
 }
 
 .blog-card-modern:hover .blog-image-modern {
@@ -212,6 +217,7 @@
   margin-bottom: 16px;
   font-size: 13px;
   color: var(--text-secondary);
+  flex-wrap: wrap;
 }
 
 .blog-date-modern {
@@ -240,13 +246,13 @@
   color: var(--text-primary);
   line-height: 1.4;
   margin-bottom: 16px;
-  display: flex;
+  display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
-  box-orient: vertical;
   overflow: hidden;
   transition: color 0.3s ease;
+  word-wrap: break-word;
 }
 
 .blog-card-modern:hover .blog-card-title-modern {
@@ -258,12 +264,12 @@
   font-size: 15px;
   line-height: 1.6;
   margin-bottom: 25px;
-  display: flex;
+  display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
   -webkit-box-orient: vertical;
-  box-orient: vertical;
   overflow: hidden;
+  word-wrap: break-word;
 }
 
 .blog-card-footer {
@@ -322,6 +328,241 @@
   padding: 60px 0 20px;
 }
 
+.cta-content {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 15px;
+}
+
+.cta-description {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 35px;
+}
+
+.cta-button-modern {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px 40px;
+  background: var(--gradient-accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px var(--shadow-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-button-modern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.cta-button-modern:hover::before {
+  left: 100%;
+}
+
+.cta-button-modern:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px var(--shadow-color);
+  filter: brightness(0.9);
+}
+
+.button-arrow {
+  transition: transform 0.3s ease;
+}
+
+.cta-button-modern:hover .button-arrow {
+  transform: translateX(5px);
+}
+
+/* Responsive fixes for all mobile screens */
+@media (max-width: 768px) {
+  .blog-section {
+    padding: 80px 0 60px;
+  }
+  
+  .blog-grid-modern {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 0 16px;
+  }
+  
+  .blog-card-content-modern {
+    padding: 24px 20px;
+  }
+  
+  .blog-card-title-modern {
+    font-size: 1.3rem;
+  }
+  
+  .blog-title-modern {
+    font-size: 2.2rem;
+  }
+  
+  .blog-description-modern {
+    font-size: 1.1rem;
+    padding: 0 16px;
+  }
+  
+  .container {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-section {
+    padding: 60px 0 40px;
+  }
+  
+  .blog-grid-modern {
+    gap: 24px;
+    padding: 0 12px;
+  }
+  
+  .blog-card-content-modern {
+    padding: 20px 16px;
+  }
+  
+  .blog-card-title-modern {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+  
+  .blog-card-excerpt-modern {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  
+  .blog-card-meta-modern {
+    font-size: 12px;
+    gap: 8px;
+  }
+  
+  .blog-title-modern {
+    font-size: 1.8rem;
+  }
+  
+  .blog-header-badge {
+    padding: 6px 18px;
+    font-size: 12px;
+  }
+  
+  .cta-button-modern {
+    padding: 12px 28px;
+    font-size: 14px;
+  }
+  
+  .cta-title {
+    font-size: 1.5rem;
+  }
+  
+  .container {
+    padding: 0 12px;
+  }
+}
+
+/* Animation classes (unchanged) */
+.blog-header-modern {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.blog-header-modern.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.decoration-line {
+  transition: all 0.6s ease 0.8s;
+  transform: scaleX(0);
+  transform-origin: center;
+}
+
+.blog-header-modern.animate-in .decoration-line {
+  transform: scaleX(1);
+}
+
+.decoration-dots span {
+  transition: all 0.4s ease;
+  opacity: 0;
+  transform: scale(0);
+}
+
+.blog-header-modern.animate-in .decoration-dots span:nth-child(1) {
+  transition-delay: 1.0s;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.blog-header-modern.animate-in .decoration-dots span:nth-child(2) {
+  transition-delay: 1.2s;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.blog-header-modern.animate-in .decoration-dots span:nth-child(3) {
+  transition-delay: 1.4s;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.blog-card-modern {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.blog-card-modern.animate-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.blog-card-modern:nth-child(1) {
+  transition-delay: 0.1s;
+}
+.blog-card-modern:nth-child(2) {
+  transition-delay: 0.2s;
+}
+.blog-card-modern:nth-child(3) {
+  transition-delay: 0.3s;
+}
+.blog-card-modern:nth-child(4) {
+  transition-delay: 0.4s;
+}
+
+.blog-card-modern:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+.blog-cta-modern {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s;
+}
+
+.blog-cta-modern.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
 .cta-content {
   max-width: 500px;
   margin: 0 auto;

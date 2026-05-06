@@ -196,11 +196,12 @@
   position: relative;
 }
 
+/* Professional mobile theme toggle (compact & clean) */
 .mobile-theme-toggle {
   background: var(--card-bg);
   border: 1.5px solid var(--border-color);
   border-radius: 8px;
-  padding: 10px;
+  padding: 8px;
   color: var(--text-primary);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -209,8 +210,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
 }
 
 .mobile-theme-toggle:hover {
@@ -227,7 +228,7 @@
 .mobile-theme-dropdown {
   position: absolute;
   top: 100%;
-  right: 60px;
+  right: 0;
   margin-top: 8px;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -251,7 +252,7 @@
 }
 
 .mobile-theme-option {
-  padding: 12px 16px;
+  padding: 10px 15px;
   color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -261,7 +262,7 @@
   text-align: left;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-size: 14px;
   outline: none;
   border-bottom: 1px solid var(--border-color);
@@ -287,12 +288,13 @@
   background-color: var(--bg-secondary);
 }
 
+/* Professional hamburger menu button (refined size) */
 .mobile-menu-btn {
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  width: 24px;
-  height: 18px;
+  width: 26px;
+  height: 20px;
   background: none;
   border: none;
   cursor: pointer;
@@ -314,7 +316,7 @@
 
 /* Hamburger to X animation */
 .mobile-menu-btn.active span:nth-child(1) {
-  transform: rotate(45deg) translate(6px, 6px);
+  transform: rotate(45deg) translate(5px, 5px);
 }
 
 .mobile-menu-btn.active span:nth-child(2) {
@@ -322,7 +324,7 @@
 }
 
 .mobile-menu-btn.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(6px, -6px);
+  transform: rotate(-45deg) translate(5px, -5px);
 }
 
 .mobile-menu-btn:focus {
@@ -374,7 +376,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 25px 20px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--border-color);
   background: var(--bg-secondary);
 }
@@ -382,15 +384,17 @@
 .mobile-menu-header h3 {
   color: var(--accent-color);
   margin: 0;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 600;
 }
 
+/* FIXED: Close button – smaller, perfectly contained */
 .close-btn {
   background: none;
   border: none;
   color: var(--text-primary);
-  font-size: 28px;
+  font-size: 22px;
+  font-weight: 400;
   cursor: pointer;
   padding: 0;
   width: 32px;
@@ -398,8 +402,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 6px;
   transition: all 0.2s ease;
+  line-height: 1;
 }
 
 .close-btn:hover {
@@ -453,7 +458,7 @@
   width: 100%;
   text-align: center;
   padding: 14px 20px;
-  font-size: 15px;
+  font-size: 16px;
   border-radius: 8px;
 }
 
@@ -484,7 +489,7 @@
   }
   
   .logo h2 {
-    font-size: 24px;
+    font-size: 26px;
   }
   
   .mobile-menu-header {
@@ -506,18 +511,43 @@
   }
   
   .mobile-controls {
-    gap: 8px;
+    gap: 10px;
   }
   
   .mobile-theme-toggle {
-    width: 40px;
-    height: 40px;
-    padding: 8px;
+    width: 38px;
+    height: 38px;
+    padding: 7px;
+    font-size: 15px;
   }
   
   .mobile-theme-dropdown {
-    right: 52px;
-    min-width: 110px;
+    right: 0;
+    min-width: 115px;
+  }
+  
+  .mobile-menu-btn {
+    width: 24px;
+    height: 18px;
+  }
+  
+  .mobile-menu-btn span {
+    height: 1.8px;
+  }
+  
+  .mobile-menu-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 4px);
+  }
+  
+  .mobile-menu-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -4px);
+  }
+  
+  /* adjust close button for very small screens */
+  .close-btn {
+    font-size: 20px;
+    width: 28px;
+    height: 28px;
   }
 }
 
