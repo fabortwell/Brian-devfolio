@@ -109,7 +109,7 @@ const Hero = () => {
               </div>
 
               <div className="code-content">
-                <div className="code-line comment">// Software Engineer</div>
+                <div className="code-line comment">Software Engineer</div>
                 <div className="code-line">
                   <span className="keyword">const&nbsp;</span>developer = {"{"}
                 </div>

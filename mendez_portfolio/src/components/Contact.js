@@ -9,7 +9,6 @@ import {
 import {
   faLinkedinIn,
   faTwitter,
-  faInstagram,
   faGithub
 } from '@fortawesome/free-brands-svg-icons';
 import emailjs from '@emailjs/browser';

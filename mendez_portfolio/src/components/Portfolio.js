@@ -29,9 +29,7 @@ const Portfolio = () => {
 
     sanityClient
       .fetch(query)
-      .then((data) => {
-        setProjects(data);
-      })
+      .then((data) => setProjects(data))
       .catch((err) => console.error("Error fetching projects:", err));
   }, []);
 
@@ -49,20 +47,20 @@ const Portfolio = () => {
       { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
     );
 
+    const headerEl = headerRef.current;
+    const buttonEl = buttonRef.current;
+    const projectEls = [...projectsRef.current];
+
     setTimeout(() => {
-      if (headerRef.current) observer.observe(headerRef.current);
-      projectsRef.current.forEach(
-        (project) => project && observer.observe(project)
-      );
-      if (buttonRef.current) observer.observe(buttonRef.current);
+      if (headerEl) observer.observe(headerEl);
+      projectEls.forEach((el) => el && observer.observe(el));
+      if (buttonEl) observer.observe(buttonEl);
     }, 100);
 
     return () => {
-      if (headerRef.current) observer.unobserve(headerRef.current);
-      projectsRef.current.forEach(
-        (project) => project && observer.unobserve(project)
-      );
-      if (buttonRef.current) observer.unobserve(buttonRef.current);
+      if (headerEl) observer.unobserve(headerEl);
+      projectEls.forEach((el) => el && observer.unobserve(el));
+      if (buttonEl) observer.unobserve(buttonEl);
     };
   }, [featuredProjects]);
 
@@ -75,6 +73,7 @@ const Portfolio = () => {
   return (
     <section className="portfolio-section" id="portfolio">
       <div className="portfolio-container">
+
         <div ref={headerRef} className="portfolio-header">
           <div className="portfolio-header-content">
             <div className="portfolio-header-text">
@@ -212,6 +211,7 @@ const Portfolio = () => {
             </Link>
           </div>
         )}
+
       </div>
     </section>
   );
