@@ -33,7 +33,14 @@ const Portfolio = () => {
       .catch((err) => console.error("Error fetching projects:", err));
   }, []);
 
-  const featuredProjects = projects.slice(0, maxHomeProjects);
+ 
+  const featuredProjects = [...projects]
+    .sort((a, b) => {
+      const dateA = new Date(a.publishedAt || a._createdAt);
+      const dateB = new Date(b.publishedAt || b._createdAt);
+      return dateB - dateA;
+    })
+    .slice(0, maxHomeProjects);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -47,6 +54,7 @@ const Portfolio = () => {
       { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
     );
 
+    // ✅ FIX: store stable references (prevents .current cleanup issue)
     const headerEl = headerRef.current;
     const buttonEl = buttonRef.current;
     const projectEls = [...projectsRef.current];
@@ -62,7 +70,7 @@ const Portfolio = () => {
       projectEls.forEach((el) => el && observer.unobserve(el));
       if (buttonEl) observer.unobserve(buttonEl);
     };
-  }, [featuredProjects]);
+  }, []); 
 
   const addProjectToRefs = (el) => {
     if (el && !projectsRef.current.includes(el)) {
@@ -74,6 +82,7 @@ const Portfolio = () => {
     <section className="portfolio-section" id="portfolio">
       <div className="portfolio-container">
 
+        {/* HEADER */}
         <div ref={headerRef} className="portfolio-header">
           <div className="portfolio-header-content">
             <div className="portfolio-header-text">
@@ -93,6 +102,7 @@ const Portfolio = () => {
           </div>
         </div>
 
+        {/* PROJECT GRID */}
         <div className="portfolio-grid">
           {featuredProjects.map((project, index) => {
             const imageUrl = project.mainImage
@@ -203,6 +213,7 @@ const Portfolio = () => {
           })}
         </div>
 
+        {/* VIEW ALL BUTTON */}
         {projects.length > maxHomeProjects && (
           <div ref={buttonRef} className="portfolio-view-all">
             <Link to="/portfolio/all" className="view-all-btn">
